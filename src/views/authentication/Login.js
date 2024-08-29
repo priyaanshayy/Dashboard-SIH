@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Box, Card, Stack, Typography } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // components
 import PageContainer from 'src/components/container/PageContainer';
@@ -8,9 +10,26 @@ import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthLogin from './auth/AuthLogin';
 
 const Login2 = () => {
-  
+  // Function to display success toast
+  const notifySuccess = () => {
+    toast.success("Login successful!", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000, // Duration of the toast
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  // This function should be called on successful login
+  const handleLoginSuccess = () => {
+    notifySuccess();
+  };
+
   return (
-    <PageContainer title="Login" description="this is Login page">
+    <PageContainer title="Login" description="This is the Login page">
       <Box
         sx={{
           position: 'relative',
@@ -42,6 +61,7 @@ const Login2 = () => {
                 <Logo />
               </Box>
               <AuthLogin
+                onSuccess={handleLoginSuccess} // Pass handleLoginSuccess to AuthLogin
                 subtext={
                   <Typography variant="subtitle1" textAlign="center" color="textSecondary" mb={1}>
                     Your Social Campaigns
@@ -70,6 +90,8 @@ const Login2 = () => {
           </Grid>
         </Grid>
       </Box>
+      {/* Ensure ToastContainer is here */}
+      <ToastContainer />
     </PageContainer>
   );
 };
