@@ -60,7 +60,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Sample Page',
+    title: 'Settings',
     icon: IconAperture,
     href: '/sample-page',
   },
