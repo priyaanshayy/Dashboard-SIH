@@ -1,36 +1,18 @@
 // src/components/shared/HeadingCard.js
 import React from 'react';
-import { Typography, CardContent, Card } from '@mui/material';
+import { Typography, CardContent } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 
-const HeadingCard = ({ variant, children, fontSize, lineHeight, fontWeight }) => (
+const HeadingCard = ({ variant, children, fontSize, lineHeight, fontWeight, color }) => (
   <BlankCard>
-    <Card>
-      <CardContent>
-        <Typography
-          variant={variant}
-          sx={{
-            fontSize: fontSize,
-            lineHeight: lineHeight,
-            fontWeight: fontWeight,
-            mb: 1 // margin-bottom
-          }}
-        >
-          {children}
-        </Typography>
-        <Typography
-          variant="body1"
-          color="textSecondary"
-          sx={{
-            fontSize: '14px',
-            lineHeight: '20px',
-            fontWeight: 400
-          }}
-        >
-          font size: {fontSize} | line-height: {lineHeight} | font weight: {fontWeight}
-        </Typography>
-      </CardContent>
-    </Card>
+    <CardContent>
+      <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color }}>
+        {children}
+      </Typography>
+      <Typography variant="body1" color="textSecondary">
+        font size: {fontSize} | line-height: {lineHeight} | font weight: {fontWeight}
+      </Typography>
+    </CardContent>
   </BlankCard>
 );
 
