@@ -14,7 +14,7 @@ import { Link, Typography } from '@mui/material';
 
 const RecentTransactions = () => {
   return (
-    <DashboardCard title="Recent Transactions">
+    <DashboardCard title="Upcoming Drives">
       <>
         <Timeline
           className="theme-timeline"
@@ -35,63 +35,63 @@ const RecentTransactions = () => {
           }}
         >
           <TimelineItem>
-            <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
+            <TimelineOppositeContent>02/09/2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="primary" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>Payment received from John Doe of $385.90</TimelineContent>
+            <TimelineContent fontWeight="600">Google</TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>10:00 am</TimelineOppositeContent>
+            <TimelineOppositeContent>29/09/2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="secondary" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">New sale recorded</Typography>{' '}
-              <Link href="/" underline="none">
+              <Typography fontWeight="600">Amazon</Typography>{' '}
+              {/* <Link href="/" underline="none">
                 #ML-3467
-              </Link>
+              </Link> */}
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>12:00 am</TimelineOppositeContent>
+            <TimelineOppositeContent>05/10/2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="success" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
-            <TimelineContent>Payment was made of $64.95 to Michael</TimelineContent>
+            <TimelineContent fontWeight="600">Microsoft</TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
+            <TimelineOppositeContent>20/10/2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="warning" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">New sale recorded</Typography>{' '}
-              <Link href="/" underline="none">
+              <Typography fontWeight="600">Atlassian</Typography>{' '}
+              {/* <Link href="/" underline="none">
                 #ML-3467
-              </Link>
+              </Link> */}
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>09:30 am</TimelineOppositeContent>
+            <TimelineOppositeContent>01/11/2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="error" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">New arrival recorded</Typography>
+              <Typography fontWeight="600">Adobe</Typography>
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>12:00 am</TimelineOppositeContent>
+            <TimelineOppositeContent>15/11/204</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="success" variant="outlined" />
             </TimelineSeparator>
-            <TimelineContent>Payment Received</TimelineContent>
+            <TimelineContent fontWeight="600">Oracle</TimelineContent>
           </TimelineItem>
         </Timeline>
       </>

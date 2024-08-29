@@ -13,39 +13,39 @@ import DashboardCard from '../../../components/shared/DashboardCard';
 const products = [
     {
         id: "1",
-        name: "Sunil Joshi",
-        post: "Web Designer",
-        pname: "Elite Admin",
-        priority: "Low",
+        name: "Vidhan Sharma",
+        post: "SDE-1",
+        pname: "Microsoft",
+        // priority: "2023",
         pbg: "primary.main",
-        budget: "3.9",
+        budget: "55",
     },
     {
         id: "2",
-        name: "Andrew McDownland",
-        post: "Project Manager",
-        pname: "Real Homes WP Theme",
-        priority: "Medium",
+        name: "Kushagra Gangwar",
+        post: "SDE-2",
+        pname: "Amazon",
+        // priority: "Medium",
         pbg: "secondary.main",
-        budget: "24.5",
+        budget: "44",
     },
     {
         id: "3",
-        name: "Christopher Jamil",
+        name: "Shalini Kumari",
         post: "Project Manager",
-        pname: "MedicalPro WP Theme",
-        priority: "High",
+        pname: "Amazon",
+        // priority: "High",
         pbg: "error.main",
-        budget: "12.8",
+        budget: "32",
     },
     {
         id: "4",
-        name: "Nirav Joshi",
+        name: "Deepesh Pandey",
         post: "Frontend Engineer",
-        pname: "Hosting Press HTML",
+        pname: "Meta",
         priority: "Critical",
         pbg: "success.main",
-        budget: "2.4",
+        budget: "30",
     },
 ];
 
@@ -53,7 +53,7 @@ const products = [
 const ProductPerformance = () => {
     return (
 
-        <DashboardCard title="Product Performance">
+        <DashboardCard title="MAANG Placed">
             <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
                 <Table
                     aria-label="simple table"
@@ -71,22 +71,22 @@ const ProductPerformance = () => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Assigned
+                                    Alumni Name
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Name
+                                Company Name
                                 </Typography>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Priority
+                                    Batch
                                 </Typography>
-                            </TableCell>
-                            <TableCell align="right">
+                            </TableCell> */}
+                            <TableCell >
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Budget
+                                    Package
                                 </Typography>
                             </TableCell>
                         </TableRow>
@@ -127,12 +127,12 @@ const ProductPerformance = () => {
                                     </Box>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
+                                    <Typography  variant="subtitle2" fontWeight={600}>
                                         {product.pname}
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Chip
+                                    {/* <Chip
                                         sx={{
                                             px: "4px",
                                             backgroundColor: product.pbg,
@@ -140,11 +140,12 @@ const ProductPerformance = () => {
                                         }}
                                         size="small"
                                         label={product.priority}
-                                    ></Chip>
+                                    ></Chip> */}
+                                    <Typography variant="h6">{product.budget}LPA</Typography>
                                 </TableCell>
-                                <TableCell align="right">
-                                    <Typography variant="h6">${product.budget}k</Typography>
-                                </TableCell>
+                                {/* <TableCell align="right">
+                                    <Typography variant="h6">{product.budget}k</Typography>
+                                </TableCell> */}
                             </TableRow>
                         ))}
                     </TableBody>
