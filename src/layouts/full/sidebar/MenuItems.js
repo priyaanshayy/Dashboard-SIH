@@ -50,11 +50,11 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: 'Extra',
+    subheader: 'Support',
   },
   {
     id: uniqueId(),
-    title: 'Icons',
+    title: 'Help & Support',
     icon: IconMoodHappy,
     href: '/icons',
   },
