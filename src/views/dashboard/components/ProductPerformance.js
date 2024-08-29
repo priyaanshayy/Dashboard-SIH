@@ -65,18 +65,19 @@ const ProductPerformance = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
+                                <Typography variant="subtitle2" fontWeight={600} style={{ color: '#1682d4' }}>
                                     Id
                                 </Typography>
+
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
+                                <Typography variant="subtitle2" fontWeight={600} style={{ color: '#1682d4' }}>
                                     Alumni Name
                                 </Typography>
                             </TableCell>
                             <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                Company Name
+                                <Typography variant="subtitle2" fontWeight={600} style={{ color: '#1682d4' }}>
+                                    Company Name
                                 </Typography>
                             </TableCell>
                             {/* <TableCell>
@@ -85,7 +86,7 @@ const ProductPerformance = () => {
                                 </Typography>
                             </TableCell> */}
                             <TableCell >
-                                <Typography variant="subtitle2" fontWeight={600}>
+                                <Typography variant="subtitle2" fontWeight={600} style={{ color: '#1682d4' }}>
                                     Package
                                 </Typography>
                             </TableCell>
@@ -127,7 +128,7 @@ const ProductPerformance = () => {
                                     </Box>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography  variant="subtitle2" fontWeight={600}>
+                                    <Typography variant="subtitle2" fontWeight={600}>
                                         {product.pname}
                                     </Typography>
                                 </TableCell>

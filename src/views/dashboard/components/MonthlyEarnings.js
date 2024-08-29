@@ -2,7 +2,7 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Typography, Avatar, Fab } from '@mui/material';
-import { IconArrowUpLeft, IconCurrencyDollar } from '@tabler/icons-react';
+import { IconArrowUpLeft, IconCurrencyRupee } from '@tabler/icons-react';
 import DashboardCard from '../../../components/shared/DashboardCard';
 
 const MonthlyEarnings = () => {
@@ -57,7 +57,7 @@ const MonthlyEarnings = () => {
       title="Monthly Placements"
       action={
         <Fab color="secondary" size="medium" sx={{color: '#ffffff'}}>
-          <IconCurrencyDollar width={24} />
+          <IconCurrencyRupee width={24} />
         </Fab>
       }
       footer={
