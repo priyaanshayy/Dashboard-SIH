@@ -18,17 +18,17 @@ const Menuitems = [
   },
   {
     navlabel: true,
-    subheader: 'Utilities',
+    subheader: 'Users',
   },
   {
     id: uniqueId(),
-    title: 'Typography',
+    title: 'Alumin',
     icon: IconTypography,
     href: '/ui/typography',
   },
   {
     id: uniqueId(),
-    title: 'Shadow',
+    title: 'Students',
     icon: IconCopy,
     href: '/ui/shadow',
   },

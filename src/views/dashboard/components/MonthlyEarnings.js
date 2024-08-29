@@ -2,7 +2,7 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Typography, Avatar, Fab } from '@mui/material';
-import { IconArrowUpRight, IconCurrencyDollar } from '@tabler/icons-react';
+import { IconArrowUpLeft, IconCurrencyDollar } from '@tabler/icons-react';
 import DashboardCard from '../../../components/shared/DashboardCard';
 
 const MonthlyEarnings = () => {
@@ -10,8 +10,9 @@ const MonthlyEarnings = () => {
   const theme = useTheme();
   const secondary = theme.palette.secondary.main;
   const secondarylight = '#f5fcff';
- 
+  const successlight = theme.palette.success.light;
 
+  
   // chart
   const optionscolumnchart = {
     chart: {
@@ -68,11 +69,12 @@ const MonthlyEarnings = () => {
           250
         </Typography>
         <Stack direction="row" spacing={1} my={1} alignItems="center">
-          <Avatar sx={{ bgcolor: 'success.light', width: 27, height: 27 }}>
-            <IconArrowUpRight width={20} color="green" />
+          <Avatar sx={{ bgcolor: successlight, width: 27, height: 27 }}>
+          <IconArrowUpLeft width={20} color="#39B69A" />
+
           </Avatar>
           <Typography variant="subtitle2" fontWeight="600">
-            +9%
+            +5%
           </Typography>
           <Typography variant="subtitle2" color="textSecondary">
             last year
