@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge } from '@mui/material';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, TextField, InputAdornment } from '@mui/material';
 import PropTypes from 'prop-types';
 import Profile from './Profile';
 import Notifications from './Notifications';
-import { IconBellRinging, IconMenu } from '@tabler/icons-react';
+import { IconBellRinging, IconMenu, IconSearch } from '@tabler/icons-react';
 
 const Header = (props) => {
 
@@ -42,6 +42,26 @@ const Header = (props) => {
         <Notifications />
 
         <Box flexGrow={1} />
+
+        {/* Search Bar */}
+        <TextField
+          variant="outlined"
+          placeholder="Search..."
+          size="small"
+          sx={{
+            display: { xs: 'none', sm: 'inline-flex' },
+            width: '200px',
+            marginRight: '16px',
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconSearch width="20" height="20" />
+              </InputAdornment>
+            ),
+          }}
+        />
+
         <Stack spacing={1} direction="row" alignItems="center">
           <Profile />
         </Stack>
