@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Menu, MenuItem, ListItemIcon, ListItemText, Avatar } from '@mui/material';
+import React from 'react';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { IconBellRinging, IconMenu } from '@tabler/icons-react';
+
+// components
 import Profile from './Profile';
-import { notifications } from './data'; // Update the path as needed
+import { IconBellRinging, IconMenu } from '@tabler/icons-react';
 
 const Header = (props) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  // const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -26,7 +21,6 @@ const Header = (props) => {
       minHeight: '70px',
     },
   }));
-
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: '100%',
     color: theme.palette.text.secondary,
@@ -49,58 +43,29 @@ const Header = (props) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
+
         <IconButton
           size="large"
-          aria-label="show notifications"
+          aria-label="show 11 new notifications"
           color="inherit"
-          aria-controls="notifications-menu"
+          aria-controls="msgs-menu"
           aria-haspopup="true"
-          onClick={handleClick}
+          sx={{
+            ...(typeof anchorEl2 === 'object' && {
+              color: 'primary.main',
+            }),
+          }}
         >
           <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
           </Badge>
+
         </IconButton>
-
-        <Menu
-          id="notifications-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              overflow: 'visible',
-              mt: 1.5,
-              '&:before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        >
-          {notifications.map((notification, index) => (
-            <MenuItem key={index} onClick={handleClose}>
-              <ListItemIcon>
-                <Avatar src={notification.avatar} alt={notification.title} />
-              </ListItemIcon>
-              <ListItemText primary={notification.title} secondary={notification.subtitle} />
-            </MenuItem>
-          ))}
-        </Menu>
-
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
+          {/* <Button variant="contained" color="primary"  target="_blank" href="https://adminmart.com/product/modernize-react-mui-dashboard-template/">
+            Upgrade to Pro
+          </Button> */}
           <Profile />
         </Stack>
       </ToolbarStyled>
@@ -110,7 +75,6 @@ const Header = (props) => {
 
 Header.propTypes = {
   sx: PropTypes.object,
-  toggleMobileSidebar: PropTypes.func.isRequired,
 };
 
 export default Header;

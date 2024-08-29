@@ -22,42 +22,42 @@ import ddIcon8 from 'src/assets/images/svgs/icon-dd-application.svg'
 //
 const notifications = [
   {
-    // avatar: img1,
+    avatar: img1,
     title: 'Roman Joined the Team!',
     subtitle: 'Congratulate him',
   },
   {
-    // avatar: img2,
+    avatar: img2,
     title: 'New message received',
     subtitle: 'Salma sent you new message',
   },
   {
-    // avatar: img3,
+    avatar: img3,
     title: 'New Payment received',
     subtitle: 'Check your earnings',
   },
   {
-    // avatar: img4,
+    avatar: img4,
     title: 'Jolly completed tasks',
     subtitle: 'Assign her new tasks',
   },
   {
-    // avatar: img1,
+    avatar: img1,
     title: 'Roman Joined the Team!',
     subtitle: 'Congratulate him',
   },
   {
-    // avatar: img2,
+    avatar: img2,
     title: 'New message received',
     subtitle: 'Salma sent you new message',
   },
   {
-    // avatar: img3,
+    avatar: img3,
     title: 'New Payment received',
     subtitle: 'Check your earnings',
   },
   {
-    // avatar: img4,
+    avatar: img4,
     title: 'Jolly completed tasks',
     subtitle: 'Assign her new tasks',
   },
