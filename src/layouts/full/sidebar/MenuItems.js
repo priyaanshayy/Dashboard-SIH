@@ -22,7 +22,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Alumin',
+    title: 'Alumni',
     icon: IconTypography,
     href: '/ui/typography',
   },
