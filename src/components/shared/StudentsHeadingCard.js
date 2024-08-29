@@ -3,7 +3,7 @@ import React from 'react';
 import { Typography, CardContent, Card, CardMedia } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 
-const HeadingCard = ({ variant, fontSize, lineHeight, fontWeight, color, backgroundColor, data }) => (
+const StudentsHeadingCard = ({ variant, fontSize, lineHeight, fontWeight, color, backgroundColor, data }) => (
   <Card
     sx={{
       backgroundColor,
@@ -40,9 +40,7 @@ const HeadingCard = ({ variant, fontSize, lineHeight, fontWeight, color, backgro
       <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color, mb: 1 }}>
         {`Email: ${data.email}`}
       </Typography>
-      <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color, mb: 1 }}>
-        {`Company: ${data.company}`}
-      </Typography>
+     
       <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color }}>
         {`Batch: ${data.batch}`}
       </Typography>
@@ -50,4 +48,4 @@ const HeadingCard = ({ variant, fontSize, lineHeight, fontWeight, color, backgro
   </Card>
 );
 
-export default HeadingCard;
+export default StudentsHeadingCard;
