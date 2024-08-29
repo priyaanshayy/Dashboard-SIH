@@ -1,19 +1,23 @@
-// src/components/shared/HeadingCard.js
 import React from 'react';
-import { Typography, CardContent } from '@mui/material';
+import { Typography, CardContent, Card } from '@mui/material';
 import BlankCard from 'src/components/shared/BlankCard';
 
-const HeadingCard = ({ variant, children, fontSize, lineHeight, fontWeight, color }) => (
-  <BlankCard>
+const HeadingCard = ({ variant, fontSize, lineHeight, fontWeight, color, backgroundColor, data }) => (
+  <Card sx={{ backgroundColor, borderRadius: '8px', boxShadow: 3 }}>
     <CardContent>
+    
       <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color }}>
-        {children}
+        {`Name: ${data.name}`}
       </Typography>
-      <Typography variant="body1" color="textSecondary">
-        font size: {fontSize} | line-height: {lineHeight} | font weight: {fontWeight}
+      <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color }}>
+        {`Age: ${data.age}`}
       </Typography>
+      <Typography variant={variant} sx={{ fontSize, lineHeight, fontWeight, color }}>
+        {`Email: ${data.email}`}
+      </Typography>
+     
     </CardContent>
-  </BlankCard>
+  </Card>
 );
 
 export default HeadingCard;
