@@ -1,48 +1,48 @@
 import React from 'react';
 import { Grid, Box, Card, Typography, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'; // Import Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS
+// import { ToastContainer, toast } from 'react-toastify'; // Commented out Toastify
+// import 'react-toastify/dist/ReactToastify.css'; // Commented out CSS
 import PageContainer from 'src/components/container/PageContainer';
 import Logo from 'src/layouts/full/shared/logo/Logo';
 import AuthRegister from './auth/AuthRegister';
 
 const Register2 = () => {
   // Function to display success toast
-  const notifySuccess = () => {
-    toast.success("Registration successful!", {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notifySuccess = () => {
+  //   toast.success("Registration successful!", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //     autoClose: 3000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
 
   // Function to display error toast
-  const notifyError = (message) => {
-    toast.error(message || "Registration failed!", {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notifyError = (message) => {
+  //   toast.error(message || "Registration failed!", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //     autoClose: 3000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
 
   // Handle registration success
-  const handleRegisterSuccess = () => {
-    notifySuccess();
-  };
+  // const handleRegisterSuccess = () => {
+  //   notifySuccess();
+  // };
 
   // Handle registration error
-  const handleRegisterError = (errorMessage) => {
-    notifyError(errorMessage);
-  };
+  // const handleRegisterError = (errorMessage) => {
+  //   notifyError(errorMessage);
+  // };
 
   return (
     <PageContainer title="Register" description="This is the Register page">
@@ -77,8 +77,8 @@ const Register2 = () => {
                 <Logo />
               </Box>
               <AuthRegister
-                onSuccess={handleRegisterSuccess}
-                onError={handleRegisterError}
+                // onSuccess={handleRegisterSuccess}
+                // onError={handleRegisterError}
                 subtext={
                   <Typography variant="subtitle1" textAlign="center" color="textSecondary" mb={1}>
                     Your Social Campaigns
@@ -108,7 +108,7 @@ const Register2 = () => {
         </Grid>
       </Box>
       {/* ToastContainer should be visible and properly styled */}
-      <ToastContainer
+      {/* <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -119,7 +119,7 @@ const Register2 = () => {
         draggable
         pauseOnHover
         theme="colored"
-      />
+      /> */}
     </PageContainer>
   );
 };

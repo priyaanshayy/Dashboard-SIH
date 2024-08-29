@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Box, Card, Stack, Typography } from '@mui/material';
-import { ToastContainer, toast } from 'react-toastify';
+// import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // components
@@ -11,21 +11,21 @@ import AuthLogin from './auth/AuthLogin';
 
 const Login2 = () => {
   // Function to display success toast
-  const notifySuccess = () => {
-    toast.success("Login successful!", {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 3000, // Duration of the toast
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  // const notifySuccess = () => {
+  //   toast.success("Login successful!", {
+  //     position: toast.POSITION.TOP_RIGHT,
+  //     autoClose: 3000, // Duration of the toast
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
+  // };
 
   // This function should be called on successful login
   const handleLoginSuccess = () => {
-    notifySuccess();
+    // notifySuccess();
   };
 
   return (
@@ -91,7 +91,7 @@ const Login2 = () => {
         </Grid>
       </Box>
       {/* Ensure ToastContainer is here */}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </PageContainer>
   );
 };

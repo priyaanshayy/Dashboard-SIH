@@ -1,19 +1,82 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, Divider, Grid, TextField, Button, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { getAuth } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from 'src/firebase/firebaseConfig'; // Adjust the path to your firebase config
 import ProfileImg from 'src/assets/images/profile/user-1.jpg'; // Replace with your profile image
 
 const ProfilePage = () => {
   const theme = useTheme();
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
+  const [adminData, setAdminData] = useState({
+    name: '',
+    email: '',
+    uid: ''
+  });
+  const [loading, setLoading] = useState(true);
 
-  const handleSaveChanges = () => {
-    // Add your save logic here if needed
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
 
-    // Redirect to dashboard
-    navigate('/dashboard');
+        if (!user) {
+          throw new Error('No user is currently logged in.');
+        }
+
+        const adminDocRef = doc(db, 'admins', user.uid); // Fetch the admin document using UID
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (adminDoc.exists()) {
+          setAdminData(adminDoc.data());
+        } else {
+          console.error('Admin document does not exist.');
+        }
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAdminData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
+
+  const handleSaveChanges = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error('No user is currently logged in.');
+      }
+
+      const adminDocRef = doc(db, 'admins', user.uid);
+      await updateDoc(adminDocRef, adminData); // Update the admin document with new data
+
+      console.log('Admin data updated successfully.');
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error updating admin data:', error);
+    }
+  };
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Box
@@ -26,7 +89,7 @@ const ProfilePage = () => {
       <Typography variant="h4" gutterBottom>
         My Profile
       </Typography>
-      
+
       <Paper
         sx={{
           padding: theme.spacing(3),
@@ -55,9 +118,9 @@ const ProfilePage = () => {
                 }}
               />
               <Typography variant="h6" sx={{ marginTop: theme.spacing(2) }}>
-                John Doe
+                {adminData.name}
               </Typography>
-              <Typography color="text.secondary">john.doe@example.com</Typography>
+              <Typography color="text.secondary">{adminData.email}</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={8}>
@@ -75,33 +138,25 @@ const ProfilePage = () => {
             >
               <TextField
                 label="Full Name"
+                name="name"
                 variant="outlined"
-                defaultValue="John Doe"
+                value={adminData.name}
+                onChange={handleInputChange}
                 fullWidth
               />
               <TextField
                 label="Email Address"
+                name="email"
                 variant="outlined"
-                defaultValue="john.doe@example.com"
-                fullWidth
-              />
-              <TextField
-                label="Phone Number"
-                variant="outlined"
-                defaultValue="+1234567890"
-                fullWidth
-              />
-              <TextField
-                label="Address"
-                variant="outlined"
-                defaultValue="123 Main St, City, Country"
+                value={adminData.email}
+                onChange={handleInputChange}
                 fullWidth
               />
               <Button
                 variant="contained"
                 color="primary"
                 sx={{ marginTop: theme.spacing(2) }}
-                onClick={handleSaveChanges} // Add onClick handler
+                onClick={handleSaveChanges}
               >
                 Save Changes
               </Button>

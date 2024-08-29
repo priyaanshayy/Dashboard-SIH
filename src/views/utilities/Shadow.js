@@ -1,56 +1,179 @@
-import React from 'react';
-import { Grid, useTheme } from '@mui/material';
-import PageContainer from 'src/components/container/PageContainer';
-import StudentsHeadingCard from 'src/components/shared/StudentsHeadingCard';
+import React, { useState, useEffect } from 'react';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { db } from '../../firebase/firebaseConfig'; 
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import img1 from 'src/assets/images/students/student1.jpg';
-import img2 from 'src/assets/images/students/student2.avif';
-import img3 from 'src/assets/images/students/student3.jpg';
 
-const data = [
-  { id: 1, name: 'Priyanshay', age: 28, email: 'priyanshi@example.com', batch: 2025, image: img1 },
-  { id: 2, name: 'Shruti', age: 34, email: 'shruti@example.com', batch: 2026, image: img2 },
-  { id: 3, name: 'Joe', age: 45, email: 'joe@example.com', batch: 2027, image: img3 },
-];
+const StudentPerformance = () => {
+  const [adminName, setAdminName] = useState('');
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const TypographyPage = () => {
-  const theme = useTheme(); // Get the theme object
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
 
-  const colors = [
-    theme.palette.primary.light,
-    theme.palette.secondary.light,
-    theme.palette.info.light,
-    theme.palette.success.light,
-    theme.palette.warning.light,
-    theme.palette.error.light,
-    theme.palette.grey[200],
-  ];
+        if (!user) {
+          throw new Error('No user is currently logged in.');
+        }
+
+        // Fetch admin data
+        const adminDocRef = doc(db, 'admins', user.uid); // Use UID to fetch admin document
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (!adminDoc.exists()) {
+          throw new Error('Admin document does not exist.');
+        }
+
+        const adminData = adminDoc.data();
+        setAdminName(adminData.name.toLowerCase());
+
+        // Fetch users data
+        const usersSnapshot = await getDocs(collection(db, 'users'));
+        const allUsers = usersSnapshot.docs.map(doc => doc.data());
+
+        // Filter users based on admin's college
+        const filteredStudents = allUsers.filter(student => {
+          // Ensure student.college is a string
+          const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
+          return student.whoami === 'Student' && studentCollege === adminData.name.toLowerCase();
+        });
+
+        // Sort students by a specific attribute (e.g., score)
+        filteredStudents.sort((a, b) => {
+          const scoreA = parseFloat(a.score) || 0; // Replace `score` with appropriate field
+          const scoreB = parseFloat(b.score) || 0;
+          return scoreB - scoreA; // Descending order
+        });
+
+        setFilteredStudents(filteredStudents);
+      } catch (err) {
+        console.error('Error fetching data: ', err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <PageContainer title="Students" description="Students">
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <DashboardCard title="Students">
-            <Grid container spacing={3}>
-              {data.map((item, index) => (
-                <Grid item xs={12} sm={6} md={4} key={item.id}>
-                  <StudentsHeadingCard
-                    variant="h3"
-                    fontSize="16px"
-                    lineHeight="24px"
-                    fontWeight="400"
-                    color="#000"
-                    backgroundColor={colors[index % colors.length]}
-                    data={item}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </DashboardCard>
-        </Grid>
-      </Grid>
-    </PageContainer>
+    <DashboardCard title="Top Students">
+      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
+        <Table
+          aria-label="simple table"
+          sx={{
+            whiteSpace: "nowrap",
+            mt: 2
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  ID
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Full Name
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Email
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  College
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Tech Stack
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Posts Count
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Verified
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Description
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredStudents.map((student, index) => (
+              <TableRow key={student.email}>
+                <TableCell>
+                  <Typography
+                    sx={{
+                      fontSize: "15px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {index + 1} {/* Display consecutive numbers starting from 1 */}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.fullName}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.email}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.college}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.techStack || '-'}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.PostsCount || '-'}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.isverified ? 'Yes' : 'No'}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {student.desc}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </DashboardCard>
   );
 };
 
-export default TypographyPage;
+export default StudentPerformance;
