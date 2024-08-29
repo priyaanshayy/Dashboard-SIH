@@ -1,10 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Avatar, Divider, Grid, TextField, Button, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ProfileImg from 'src/assets/images/profile/user-1.jpg'; // Replace with your profile image
 
 const ProfilePage = () => {
   const theme = useTheme();
+  const navigate = useNavigate(); // Use the useNavigate hook
+
+  const handleSaveChanges = () => {
+    // Add your save logic here if needed
+
+    // Redirect to dashboard
+    navigate('/dashboard');
+  };
 
   return (
     <Box
@@ -88,7 +97,12 @@ const ProfilePage = () => {
                 defaultValue="123 Main St, City, Country"
                 fullWidth
               />
-              <Button variant="contained" color="primary" sx={{ marginTop: theme.spacing(2) }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ marginTop: theme.spacing(2) }}
+                onClick={handleSaveChanges} // Add onClick handler
+              >
                 Save Changes
               </Button>
             </Box>
