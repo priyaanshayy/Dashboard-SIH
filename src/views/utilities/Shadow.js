@@ -3,6 +3,9 @@ import { Grid, useTheme } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 import StudentsHeadingCard from 'src/components/shared/StudentsHeadingCard';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import img1 from 'src/assets/images/student/student1.jpg';
+import img2 from 'src/assets/images/student/student2.avif';
+import img3 from 'src/assets/images/student/student3.jpg';
 
 const data = [
   { id: 1, name: 'Priyanshay', age: 28, email: 'priyanshi@example.com', batch: 2025, image: 'https://imgv3.fotor.com/images/blog-richtext-image/a-woman-in-black-suit.jpg' },
