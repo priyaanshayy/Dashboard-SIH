@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, Grid } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import { IconSearch } from '@tabler/icons-react';
 
 const StudentPerformance = () => {
   const [adminName, setAdminName] = useState('');
@@ -20,6 +21,8 @@ const StudentPerformance = () => {
     isverified: false,
     desc: ''
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +34,6 @@ const StudentPerformance = () => {
           throw new Error('No user is currently logged in.');
         }
 
-        // Fetch admin data
         const adminDocRef = doc(db, 'admins', user.uid);
         const adminDoc = await getDoc(adminDocRef);
 
@@ -42,17 +44,14 @@ const StudentPerformance = () => {
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
 
-        // Fetch users data
         const usersSnapshot = await getDocs(collection(db, 'users'));
         const allUsers = usersSnapshot.docs.map(doc => doc.data());
 
-        // Filter users based on admin's college
         const filteredStudents = allUsers.filter(student => {
           const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
           return student.whoami === 'Student' && studentCollege === adminData.name.toLowerCase();
         });
 
-        // Sort students by a specific attribute (e.g., score)
         filteredStudents.sort((a, b) => {
           const scoreA = parseFloat(a.score) || 0; 
           const scoreB = parseFloat(b.score) || 0;
@@ -78,7 +77,6 @@ const StudentPerformance = () => {
         whoami: 'Student'
       });
       setOpen(false);
-      // Optionally, refetch the students data to include the new student
     } catch (error) {
       console.error('Error adding student: ', error);
     }
@@ -91,17 +89,72 @@ const StudentPerformance = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    const filtered = filteredStudents.filter(student => 
+      student.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+    const filtered = filteredStudents.filter(student => 
+      student.techStack.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <DashboardCard title=" Students List">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <DashboardCard title="Students List">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h6">Our Students</Typography>
+        <Grid container alignItems="right" spacing={2} sx={{ maxWidth: '400px', ml: 'auto', justifyContent: 'flex-end' }}>
+          <Grid item>
+            <TextField
+              variant="outlined"
+              placeholder="Search..."
+              size="small"
+              value={searchQuery}
+              onChange={handleSearch}
+              sx={{
+                display: { xs: 'none', sm: 'inline-flex' },
+                width: '200px',
+                marginRight: '16px',
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconSearch width="20" height="20" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          {/* <Grid item>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+              <InputLabel>Filter</InputLabel>
+              <Select
+                value={filter}
+                onChange={handleFilterChange}
+                label="Filter"
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="frontend">MongoDB</MenuItem>
+                <MenuItem value="backend">Express</MenuItem>
+                <MenuItem value="fullstack">React</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid> */}
+        </Grid>
         <Button variant="contained" color="primary" onClick={handleOpen}>
           Add Student
         </Button>
       </Box>
+      
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' }, mt: 2 }}>
         <Table aria-label="simple table" sx={{ whiteSpace: "nowrap" }}>
           <TableHead>
