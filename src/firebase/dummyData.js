@@ -1,3 +1,5 @@
+// pushData.js
+
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, writeBatch, doc } from 'firebase/firestore';
 
@@ -17,127 +19,130 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 
 // Data to be pushed
-const studentsData = [
+const alumniData = [
     {
-        FollowersCount: 300,
-        FollowingCount: 150,
-        PostsCount: 10,
-        avatar: "https://example.com/avatar1.jpg",
+        FollowersCount: 2000,
+        FollowingCount: 350,
+        PostsCount: 30,
+        avatar: "https://example.com/avatar11.jpg",
         college: "GLA University",
         createdAt: "2024-08-27T15:20:35.361Z",
-        desc: "Student learning Full Stack Development with MERN stack",
-        email: "john.doe@example.com",
-        fullName: "John Doe",
-        isverified: false,
-        whoami: "Student",
-        techStack: "MongoDB, Express, React, Node.js"
+        desc: "Software Engineer at Google",
+        email: "emma.wilson@example.com",
+        fullName: "Emma Wilson",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "80k"
     },
     {
-        FollowersCount: 350,
-        FollowingCount: 120,
-        PostsCount: 12,
-        avatar: "https://example.com/avatar2.jpg",
+        FollowersCount: 1500,
+        FollowingCount: 300,
+        PostsCount: 22,
+        avatar: "https://example.com/avatar12.jpg",
         college: "GLA University",
         createdAt: "2024-08-28T12:30:45.361Z",
-        desc: "Enthusiastic about Frontend Development, working with React and Tailwind CSS",
-        email: "jane.doe@example.com",
-        fullName: "Jane Doe",
-        isverified: false,
-        whoami: "Student",
-        techStack: "HTML, CSS, JavaScript, React, Tailwind CSS"
+        desc: "Data Analyst at Amazon",
+        email: "michael.jones@example.com",
+        fullName: "Michael Jones",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "70k"
     },
     {
-        FollowersCount: 280,
-        FollowingCount: 160,
-        PostsCount: 8,
-        avatar: "https://example.com/avatar3.jpg",
+        FollowersCount: 1800,
+        FollowingCount: 320,
+        PostsCount: 28,
+        avatar: "https://example.com/avatar13.jpg",
         college: "GLA University",
         createdAt: "2024-08-29T16:45:55.361Z",
-        desc: "Aspiring Data Scientist with knowledge of Python and Machine Learning",
-        email: "sam.smith@example.com",
-        fullName: "Sam Smith",
-        isverified: false,
-        whoami: "Student",
-        techStack: "Python, Pandas, Scikit-learn, TensorFlow"
+        desc: "Product Designer at Apple",
+        email: "olivia.taylor@example.com",
+        fullName: "Olivia Taylor",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "75k"
     },
     {
-        FollowersCount: 400,
-        FollowingCount: 200,
-        PostsCount: 15,
-        avatar: "https://example.com/avatar4.jpg",
+        FollowersCount: 2100,
+        FollowingCount: 380,
+        PostsCount: 35,
+        avatar: "https://example.com/avatar14.jpg",
         college: "GLA University",
         createdAt: "2024-08-30T09:10:05.361Z",
-        desc: "Back-end Developer focusing on RESTful APIs and cloud deployment",
-        email: "lisa.brown@example.com",
-        fullName: "Lisa Brown",
-        isverified: false,
-        whoami: "Student",
-        techStack: "Node.js, Express, MongoDB, AWS"
+        desc: "Marketing Manager at Facebook",
+        email: "jack.brown@example.com",
+        fullName: "Jack Brown",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "85k"
     },
     {
-        FollowersCount: 310,
-        FollowingCount: 170,
-        PostsCount: 9,
-        avatar: "https://example.com/avatar5.jpg",
+        FollowersCount: 2200,
+        FollowingCount: 390,
+        PostsCount: 40,
+        avatar: "https://example.com/avatar15.jpg",
         college: "GLA University",
         createdAt: "2024-09-01T14:20:15.361Z",
-        desc: "Mobile App Developer with a passion for Flutter and Firebase",
-        email: "tom.jones@example.com",
-        fullName: "Tom Jones",
-        isverified: false,
-        whoami: "Student",
-        techStack: "Flutter, Dart, Firebase"
+        desc: "UX Researcher at Microsoft",
+        email: "sophia.moore@example.com",
+        fullName: "Sophia Moore",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "90k"
     },
     {
-        FollowersCount: 270,
-        FollowingCount: 140,
-        PostsCount: 7,
-        avatar: "https://example.com/avatar6.jpg",
+        FollowersCount: 2300,
+        FollowingCount: 400,
+        PostsCount: 45,
+        avatar: "https://example.com/avatar16.jpg",
         college: "GLA University",
         createdAt: "2024-09-02T10:30:25.361Z",
-        desc: "AI enthusiast with hands-on experience in Deep Learning",
-        email: "emily.davis@example.com",
-        fullName: "Emily Davis",
-        isverified: false,
-        whoami: "Student",
-        techStack: "Python, Keras, PyTorch"
+        desc: "Cloud Engineer at IBM",
+        email: "william.smith@example.com",
+        fullName: "William Smith",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "95k"
     },
     {
-        FollowersCount: 330,
-        FollowingCount: 180,
-        PostsCount: 11,
-        avatar: "https://example.com/avatar7.jpg",
+        FollowersCount: 2400,
+        FollowingCount: 410,
+        PostsCount: 50,
+        avatar: "https://example.com/avatar17.jpg",
         college: "GLA University",
         createdAt: "2024-09-03T11:40:35.361Z",
-        desc: "Web Developer with a knack for building responsive websites",
-        email: "alex.johnson@example.com",
-        fullName: "Alex Johnson",
-        isverified: false,
-        whoami: "Student",
-        techStack: "HTML, CSS, JavaScript, Bootstrap"
+        desc: "Systems Analyst at Oracle",
+        email: "ava.davis@example.com",
+        fullName: "Ava Davis",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "100k"
     },
     {
-        FollowersCount: 360,
-        FollowingCount: 190,
-        PostsCount: 14,
-        avatar: "https://example.com/avatar8.jpg",
+        FollowersCount: 2500,
+        FollowingCount: 420,
+        PostsCount: 55,
+        avatar: "https://example.com/avatar18.jpg",
         college: "GLA University",
         createdAt: "2024-09-04T13:50:45.361Z",
-        desc: "Blockchain Developer with a focus on smart contracts",
-        email: "sarah.moore@example.com",
-        fullName: "Sarah Moore",
-        isverified: false,
-        whoami: "Student",
-        techStack: "Solidity, Ethereum, Web3.js"
+        desc: "Network Engineer at Cisco",
+        email: "noah.johnson@example.com",
+        fullName: "Noah Johnson",
+        isverified: true,
+        whoami: "Alumni",
+        salary: "105k"
     }
 ];
 
+  
+
 // Batch write
 const batch = writeBatch(db);
+const adminsCollection = collection(db, 'users');
 
-studentsData.forEach((student) => {
-  const newDocRef = doc(collection(db, 'users')); 
-  batch.set(newDocRef, student);
+alumniData.forEach((alumni) => {
+  const newDocRef = doc(collection(db, 'users')); // Create a new document reference with a random ID
+  batch.set(newDocRef, alumni);
 });
 
 batch.commit().then(() => {

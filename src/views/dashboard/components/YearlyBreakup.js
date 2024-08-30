@@ -5,17 +5,17 @@ import { Grid, Stack, Typography, Avatar } from '@mui/material';
 import { IconArrowUpLeft } from '@tabler/icons-react';
 
 import DashboardCard from '../../../components/shared/DashboardCard';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../firebase/firebaseConfig'; 
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../../../firebase/firebaseConfig'; 
 
 const YearlyBreakup = () => {
   const [alumniCount, setAlumniCount] = useState(0);
   const [studentCount, setStudentCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [color, setColor] = useState('#1976d2'); // Default color
 
   const theme = useTheme();
-  const primary = theme.palette.primary.main;
   const primarylight = '#ecf2ff';
   const successlight = theme.palette.success.light;
 
@@ -33,7 +33,7 @@ const YearlyBreakup = () => {
       },
       height: 250,
     },
-    colors: [primary, primarylight],
+    colors: [color, primarylight], // Use fetched color here
     plotOptions: {
       pie: {
         startAngle: 0,
@@ -83,6 +83,19 @@ const YearlyBreakup = () => {
 
         setAlumniCount(alumni);
         setStudentCount(students);
+
+        // Fetch color setting from Firestore
+        if (auth.currentUser) {
+          const userDoc = await getDoc(doc(db, 'admins', auth.currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setColor(userData.color || '#1976d2'); // Default color if not set
+          } else {
+            console.error("No such document!");
+          }
+        } else {
+          console.error("No authenticated user found!");
+        }
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -98,7 +111,6 @@ const YearlyBreakup = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   const currentTotal = alumniCount + studentCount;
-  const percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
 
   const series = [alumniCount, studentCount];
 
@@ -122,21 +134,10 @@ const YearlyBreakup = () => {
           <Typography variant="h4" fontWeight="700">
             {currentTotal}
           </Typography>
-          <Stack direction="row" spacing={1} mt={1} alignItems="center">
-            <Avatar sx={{ bgcolor: successlight, width: 27, height: 27 }}>
-              <IconArrowUpLeft width={20} color="#39B69A" />
-            </Avatar>
-            <Typography variant="subtitle2" fontWeight="600">
-              {Math.round(percentageChange)}%
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              change from last year
-            </Typography>
-          </Stack>
           <Stack spacing={3} mt={5} direction="row">
             <Stack direction="row" spacing={1} alignItems="center">
               <Avatar
-                sx={{ width: 9, height: 9, bgcolor: primary, svg: { display: 'none' } }}
+                sx={{ width: 9, height: 9, bgcolor: color, svg: { display: 'none' } }}
               ></Avatar>
               <Typography variant="subtitle2" color="textSecondary">
                 Alumni

@@ -1,25 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
-
+import { doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../../../firebase/firebaseConfig'; // Adjust path as necessary
+import chroma from 'chroma-js'; // Import chroma-js
 
 const SalesOverview = () => {
+    // State for month selection and chart colors
+    const [month, setMonth] = useState('1');
+    const [chartColor, setChartColor] = useState('#1976d2'); // Default color
 
-    // select
-    const [month, setMonth] = React.useState('1');
+    // Fetch color setting from Firestore
+    useEffect(() => {
+        const fetchColorSetting = async () => {
+            try {
+                if (auth.currentUser) {
+                    const userDoc = await getDoc(doc(db, 'admins', auth.currentUser.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        const fetchedColor = userData.color || '#1976d2'; // Default color if not set
+                        console.log("Fetched color:", fetchedColor); // Log fetched color
+                        setChartColor(fetchedColor);
+                    } else {
+                        console.error("No such document!");
+                    }
+                } else {
+                    console.error("No authenticated user found!");
+                }
+            } catch (error) {
+                console.error("Error fetching color setting:", error);
+            }
+        };
 
+        fetchColorSetting();
+    }, []);
+
+    // Handle month change
     const handleChange = (event) => {
         setMonth(event.target.value);
     };
 
-    // chart color
+    // Use chroma-js to create a shade of the main color
+    const secondaryColor = chroma(chartColor).darken(1.5).hex(); // Darker shade of chartColor
+
+    // Chart color and options
     const theme = useTheme();
     const primary = theme.palette.primary.main;
-    const secondary = theme.palette.secondary.main;
 
-    // chart
     const optionscolumnchart = {
         chart: {
             type: 'bar',
@@ -30,7 +59,7 @@ const SalesOverview = () => {
             },
             height: 370,
         },
-        colors: [primary, secondary],
+        colors: [chartColor, secondaryColor], // Use main color and its shade
         plotOptions: {
             bar: {
                 horizontal: false,
@@ -41,13 +70,12 @@ const SalesOverview = () => {
                 borderRadiusWhenStacked: 'all',
             },
         },
-
         stroke: {
             show: true,
             width: 5,
             lineCap: "butt",
             colors: ["transparent"],
-          },
+        },
         dataLabels: {
             enabled: false,
         },
@@ -77,6 +105,7 @@ const SalesOverview = () => {
             fillSeriesColor: false,
         },
     };
+
     const seriescolumnchart = [
         {
             name: 'Alumnis',
@@ -89,20 +118,22 @@ const SalesOverview = () => {
     ];
 
     return (
-
-        <DashboardCard title="Users Overview" action={
-            <Select
-                labelId="month-dd"
-                id="month-dd"
-                value={month}
-                size="small"
-                onChange={handleChange}
-            >
-                <MenuItem value={1}>March 2023</MenuItem>
-                <MenuItem value={2}>April 2022</MenuItem>
-                <MenuItem value={3}>May 2021</MenuItem>
-            </Select>
-        }>
+        <DashboardCard
+            title="Users Overview"
+            action={
+                <Select
+                    labelId="month-dd"
+                    id="month-dd"
+                    value={month}
+                    size="small"
+                    onChange={handleChange}
+                >
+                    <MenuItem value={1}>March 2023</MenuItem>
+                    <MenuItem value={2}>April 2022</MenuItem>
+                    <MenuItem value={3}>May 2021</MenuItem>
+                </Select>
+            }
+        >
             <Chart
                 options={optionscolumnchart}
                 series={seriescolumnchart}

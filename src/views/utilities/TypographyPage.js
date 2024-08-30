@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs, addDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, addDoc, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
 import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, InputAdornment, Modal, IconButton } from '@mui/material';
@@ -8,6 +8,7 @@ import { IconSearch, IconTrash } from '@tabler/icons-react';
 
 const AlumniPerformance = () => {
   const [adminName, setAdminName] = useState('');
+  const [adminColor, setAdminColor] = useState('#1976d2'); // Default color
   const [filteredAlumni, setFilteredAlumni] = useState([]);
   const [displayedAlumni, setDisplayedAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,8 @@ const AlumniPerformance = () => {
     techStack: '',
     postsCount: '',
     isverified: false,
-    desc: ''
+    desc: '',
+    salary:'',
   });
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -43,6 +45,7 @@ const AlumniPerformance = () => {
 
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
+        setAdminColor(adminData.color || '#1976d2'); 
 
         const usersCollection = collection(db, 'users');
         const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
@@ -107,7 +110,8 @@ const AlumniPerformance = () => {
         techStack: '',
         postsCount: '',
         isverified: false,
-        desc: ''
+        desc: '',
+        salary:'',
       });
       setOpen(false);
     } catch (err) {
@@ -147,7 +151,11 @@ const AlumniPerformance = () => {
               ),
             }}
           />
-          <Button variant="contained" color="primary" onClick={handleAddAlumni}>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: adminColor }}
+            onClick={handleAddAlumni}
+          >
             Add New Alumni
           </Button>
         </Box>
@@ -212,6 +220,14 @@ const AlumniPerformance = () => {
               fullWidth
               margin="normal"
               value={newAlumni.postsCount}
+              onChange={handleInputChange}
+            />
+            <TextField
+              name="salary"
+              label="Salary"
+              fullWidth
+              margin="normal"
+              value={newAlumni.salary}
               onChange={handleInputChange}
             />
             <TextField

@@ -8,6 +8,7 @@ import { IconSearch, IconTrash } from '@tabler/icons-react';
 
 const StudentPerformance = () => {
   const [adminName, setAdminName] = useState('');
+  const [adminColor, setAdminColor] = useState('#1976d2'); // Default color
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,6 +44,7 @@ const StudentPerformance = () => {
 
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
+        setAdminColor(adminData.color || '#1976d2');
 
         const usersCollectionRef = collection(db, 'users');
         
@@ -151,23 +153,12 @@ const StudentPerformance = () => {
               }}
             />
           </Grid>
-          {/* <Grid item>
-            <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-              <InputLabel>Filter</InputLabel>
-              <Select
-                value={filter}
-                onChange={handleFilterChange}
-                label="Filter"
-              >
-                <MenuItem value="all">All</MenuItem>
-                <MenuItem value="frontend">MongoDB</MenuItem>
-                <MenuItem value="backend">Express</MenuItem>
-                <MenuItem value="fullstack">React</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid> */}
         </Grid>
-        <Button variant="contained" color="primary" onClick={handleOpen}>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: adminColor }}
+          onClick={handleOpen}
+        >
           Add Student
         </Button>
       </Box>
@@ -296,66 +287,80 @@ const StudentPerformance = () => {
           p: 4,
         }}>
           <Typography id="add-student-modal-title" variant="h6" component="h2">
-            Add New Student
+            Add Student
           </Typography>
-          <Box component="form" sx={{ mt: 2 }}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{ mt: 2 }}
+          >
             <TextField
-              name="fullName"
-              label="Full Name"
               fullWidth
               margin="normal"
+              name="fullName"
+              label="Full Name"
+              variant="outlined"
               value={newStudent.fullName}
               onChange={handleChange}
             />
             <TextField
-              name="email"
-              label="Email"
               fullWidth
               margin="normal"
+              name="email"
+              label="Email"
+              variant="outlined"
               value={newStudent.email}
               onChange={handleChange}
             />
             <TextField
-              name="college"
-              label="College"
               fullWidth
               margin="normal"
+              name="college"
+              label="College"
+              variant="outlined"
               value={newStudent.college}
               onChange={handleChange}
             />
             <TextField
-              name="techStack"
-              label="Tech Stack"
               fullWidth
               margin="normal"
+              name="techStack"
+              label="Tech Stack"
+              variant="outlined"
               value={newStudent.techStack}
               onChange={handleChange}
             />
             <TextField
-              name="PostsCount"
-              label="Posts Count"
               fullWidth
               margin="normal"
+              name="PostsCount"
+              label="Posts Count"
+              variant="outlined"
               value={newStudent.PostsCount}
               onChange={handleChange}
             />
             <TextField
-              name="desc"
-              label="Description"
               fullWidth
               margin="normal"
+              name="desc"
+              label="Description"
+              variant="outlined"
               value={newStudent.desc}
               onChange={handleChange}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-              fullWidth
-              onClick={handleAddStudent}
-            >
-              Add Student
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button variant="outlined" color="error" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ ml: 2, bgcolor: '#007bff', color: 'white', '&:hover': { bgcolor: '#0056b3' } }}
+                onClick={handleAddStudent}
+              >
+                Add
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Modal>
