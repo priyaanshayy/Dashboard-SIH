@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, Paper, Modal } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, InputAdornment, Modal } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
+import { IconSearch } from '@tabler/icons-react';
 
 const AlumniPerformance = () => {
   const [adminName, setAdminName] = useState('');
   const [filteredAlumni, setFilteredAlumni] = useState([]);
-  const [displayedAlumni, setDisplayedAlumni] = useState([]); // Added to handle filtered list
+  const [displayedAlumni, setDisplayedAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false); // State to control the Modal visibility
+  const [open, setOpen] = useState(false);
   const [newAlumni, setNewAlumni] = useState({
     fullName: '',
     email: '',
@@ -58,7 +59,7 @@ const AlumniPerformance = () => {
         });
 
         setFilteredAlumni(filteredAlumni);
-        setDisplayedAlumni(filteredAlumni); // Initialize displayed list
+        setDisplayedAlumni(filteredAlumni);
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -71,7 +72,6 @@ const AlumniPerformance = () => {
   }, []);
 
   useEffect(() => {
-    // Filter alumni based on search query
     const filtered = filteredAlumni.filter(alumni =>
       alumni.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -79,7 +79,7 @@ const AlumniPerformance = () => {
   }, [searchQuery, filteredAlumni]);
 
   const handleAddAlumni = () => {
-    setOpen(true); // Show the Modal when the button is clicked
+    setOpen(true);
   };
 
   const handleInputChange = (e) => {
@@ -98,8 +98,8 @@ const AlumniPerformance = () => {
         college: adminName,
       });
       setFilteredAlumni([...filteredAlumni, newAlumni]);
-      setDisplayedAlumni([...filteredAlumni, newAlumni]); // Update displayed list
-      setOpen(false); // Close the Modal after form submission
+      setDisplayedAlumni([...filteredAlumni, newAlumni]);
+      setOpen(false);
       setNewAlumni({
         fullName: '',
         email: '',
@@ -119,29 +119,37 @@ const AlumniPerformance = () => {
 
   return (
     <DashboardCard title="Alumni List">
-      <Box display="flex" flexDirection="column" mb={2}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6" fontWeight={600}>
-            Our Alumni
-          </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6">Our Alumni</Typography>
+        <Box display="flex" alignItems="center">
+          <TextField
+            placeholder="Search"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{
+              display: { xs: 'none', sm: 'inline-flex' },
+              width: '200px',
+              marginRight: 2
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <IconSearch width="20" height="20" />
+                </InputAdornment>
+              ),
+            }}
+          />
           <Button variant="contained" color="primary" onClick={handleAddAlumni}>
             Add New Alumni
           </Button>
         </Box>
-
-        <TextField
-          placeholder="Search by full name"
-          variant="outlined"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
       </Box>
 
       <Modal
         open={open}
-        onClose={() => setOpen(false)} // Close the Modal when the backdrop is clicked
+        onClose={() => setOpen(false)}
         aria-labelledby="add-alumni-modal-title"
         aria-describedby="add-alumni-modal-description"
       >
@@ -156,88 +164,73 @@ const AlumniPerformance = () => {
           boxShadow: 24,
           p: 4,
         }}>
-          <Typography variant="h6" mb={2}>
+          <Typography id="add-alumni-modal-title" variant="h6" component="h2">
             Add New Alumni
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <Box component="form" sx={{ mt: 2 }} onSubmit={handleSubmit}>
             <TextField
               name="fullName"
               label="Full Name"
-              variant="outlined"
-              value={newAlumni.fullName}
-              onChange={handleInputChange}
               fullWidth
               margin="normal"
+              value={newAlumni.fullName}
+              onChange={handleInputChange}
             />
             <TextField
               name="email"
               label="Email"
-              variant="outlined"
-              value={newAlumni.email}
-              onChange={handleInputChange}
               fullWidth
               margin="normal"
+              value={newAlumni.email}
+              onChange={handleInputChange}
             />
             <TextField
               name="college"
               label="College"
-              variant="outlined"
-              value={newAlumni.college}
-              onChange={handleInputChange}
               fullWidth
               margin="normal"
+              value={newAlumni.college}
+              onChange={handleInputChange}
             />
             <TextField
               name="techStack"
               label="Tech Stack"
-              variant="outlined"
-              value={newAlumni.techStack}
-              onChange={handleInputChange}
               fullWidth
               margin="normal"
+              value={newAlumni.techStack}
+              onChange={handleInputChange}
             />
             <TextField
               name="postsCount"
               label="Posts Count"
-              variant="outlined"
+              fullWidth
+              margin="normal"
               value={newAlumni.postsCount}
               onChange={handleInputChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              name="isverified"
-              label="Verified"
-              variant="outlined"
-              value={newAlumni.isverified}
-              onChange={handleInputChange}
-              fullWidth
-              margin="normal"
             />
             <TextField
               name="desc"
               label="Description"
-              variant="outlined"
-              value={newAlumni.desc}
-              onChange={handleInputChange}
               fullWidth
               margin="normal"
+              value={newAlumni.desc}
+              onChange={handleInputChange}
             />
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+              fullWidth
+            >
               Submit
             </Button>
-          </form>
+          </Box>
         </Box>
       </Modal>
 
-      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
-        <Table
-          aria-label="simple table"
-          sx={{
-            whiteSpace: "nowrap",
-            mt: 2
-          }}
-        >
+      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' }, mt: 2 }}>
+        <Table aria-label="simple table" sx={{ whiteSpace: "nowrap" }}>
           <TableHead>
             <TableRow>
               <TableCell>
@@ -286,13 +279,8 @@ const AlumniPerformance = () => {
             {displayedAlumni.map((alumni, index) => (
               <TableRow key={alumni.email}>
                 <TableCell>
-                  <Typography
-                    sx={{
-                      fontSize: "15px",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {index + 1} {/* Display consecutive numbers starting from 1 */}
+                  <Typography sx={{ fontSize: "15px", fontWeight: "500" }}>
+                    {index + 1}
                   </Typography>
                 </TableCell>
                 <TableCell>
