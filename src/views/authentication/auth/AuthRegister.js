@@ -43,7 +43,7 @@ const AuthRegister = ({ title, subtitle, subtext }) => {
             <Box>
                 <Stack mb={3}>
                     <Typography variant="subtitle1"
-                        fontWeight={600} component="label" htmlFor='name' mb="5px">Name</Typography>
+                        fontWeight={600} component="label" htmlFor='name' mb="5px">College Name</Typography>
                     <CustomTextField id="name" variant="outlined" fullWidth value={name} onChange={(e) => setName(e.target.value)} />
 
                     <Typography variant="subtitle1"
