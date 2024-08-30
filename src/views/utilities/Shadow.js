@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 
 const StudentPerformance = () => {
@@ -22,7 +22,7 @@ const StudentPerformance = () => {
         }
 
         // Fetch admin data
-        const adminDocRef = doc(db, 'admins', user.uid); // Use UID to fetch admin document
+        const adminDocRef = doc(db, 'admins', user.uid);
         const adminDoc = await getDoc(adminDocRef);
 
         if (!adminDoc.exists()) {
@@ -38,16 +38,15 @@ const StudentPerformance = () => {
 
         // Filter users based on admin's college
         const filteredStudents = allUsers.filter(student => {
-          // Ensure student.college is a string
           const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
           return student.whoami === 'Student' && studentCollege === adminData.name.toLowerCase();
         });
 
         // Sort students by a specific attribute (e.g., score)
         filteredStudents.sort((a, b) => {
-          const scoreA = parseFloat(a.score) || 0; // Replace `score` with appropriate field
+          const scoreA = parseFloat(a.score) || 0; 
           const scoreB = parseFloat(b.score) || 0;
-          return scoreB - scoreA; // Descending order
+          return scoreB - scoreA; 
         });
 
         setFilteredStudents(filteredStudents);
@@ -62,19 +61,24 @@ const StudentPerformance = () => {
     fetchData();
   }, []);
 
+  const handleAddStudent = () => {
+    // Implement the logic to add a student (e.g., open a modal or redirect to a form page)
+    console.log('Add Student button clicked');
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <DashboardCard title="Top Students">
-      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
-        <Table
-          aria-label="simple table"
-          sx={{
-            whiteSpace: "nowrap",
-            mt: 2
-          }}
-        >
+    <DashboardCard title=" Students List">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6">Recent Batch Students</Typography>
+        <Button variant="contained" color="primary" onClick={handleAddStudent}>
+          Add Student
+        </Button>
+      </Box>
+      <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' }, mt: 2 }}>
+        <Table aria-label="simple table" sx={{ whiteSpace: "nowrap" }}>
           <TableHead>
             <TableRow>
               <TableCell>
@@ -123,13 +127,8 @@ const StudentPerformance = () => {
             {filteredStudents.map((student, index) => (
               <TableRow key={student.email}>
                 <TableCell>
-                  <Typography
-                    sx={{
-                      fontSize: "15px",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {index + 1} {/* Display consecutive numbers starting from 1 */}
+                  <Typography sx={{ fontSize: "15px", fontWeight: "500" }}>
+                    {index + 1}
                   </Typography>
                 </TableCell>
                 <TableCell>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 
 const StudentPerformance = () => {
@@ -67,6 +67,14 @@ const StudentPerformance = () => {
 
   return (
     <DashboardCard title="Alumni List">
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" fontWeight={600}>
+          Our Alumni
+        </Typography>
+        <Button variant="contained" color="primary">
+          Add New Alumni
+        </Button>
+      </Box>
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
         <Table
           aria-label="simple table"
