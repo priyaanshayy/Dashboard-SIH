@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 
 const StudentPerformance = () => {
@@ -10,6 +10,16 @@ const StudentPerformance = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [newStudent, setNewStudent] = useState({
+    fullName: '',
+    email: '',
+    college: '',
+    techStack: '',
+    PostsCount: '',
+    isverified: false,
+    desc: ''
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,10 +71,25 @@ const StudentPerformance = () => {
     fetchData();
   }, []);
 
-  const handleAddStudent = () => {
-    // Implement the logic to add a student (e.g., open a modal or redirect to a form page)
-    console.log('Add Student button clicked');
+  const handleAddStudent = async () => {
+    try {
+      await addDoc(collection(db, 'users'), {
+        ...newStudent,
+        whoami: 'Student'
+      });
+      setOpen(false);
+      // Optionally, refetch the students data to include the new student
+    } catch (error) {
+      console.error('Error adding student: ', error);
+    }
   };
+
+  const handleChange = (e) => {
+    setNewStudent({ ...newStudent, [e.target.name]: e.target.value });
+  };
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -72,8 +97,8 @@ const StudentPerformance = () => {
   return (
     <DashboardCard title=" Students List">
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">Recent Batch Students</Typography>
-        <Button variant="contained" color="primary" onClick={handleAddStudent}>
+        <Typography variant="h6">Our Students</Typography>
+        <Button variant="contained" color="primary" onClick={handleOpen}>
           Add Student
         </Button>
       </Box>
@@ -171,6 +196,89 @@ const StudentPerformance = () => {
           </TableBody>
         </Table>
       </Box>
+
+      {/* Modal for Adding a Student */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="add-student-modal-title"
+        aria-describedby="add-student-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography id="add-student-modal-title" variant="h6" component="h2">
+            Add New Student
+          </Typography>
+          <Box component="form" sx={{ mt: 2 }}>
+            <TextField
+              name="fullName"
+              label="Full Name"
+              fullWidth
+              margin="normal"
+              value={newStudent.fullName}
+              onChange={handleChange}
+            />
+            <TextField
+              name="email"
+              label="Email"
+              fullWidth
+              margin="normal"
+              value={newStudent.email}
+              onChange={handleChange}
+            />
+            <TextField
+              name="college"
+              label="College"
+              fullWidth
+              margin="normal"
+              value={newStudent.college}
+              onChange={handleChange}
+            />
+            <TextField
+              name="techStack"
+              label="Tech Stack"
+              fullWidth
+              margin="normal"
+              value={newStudent.techStack}
+              onChange={handleChange}
+            />
+            <TextField
+              name="PostsCount"
+              label="Posts Count"
+              fullWidth
+              margin="normal"
+              value={newStudent.PostsCount}
+              onChange={handleChange}
+            />
+            <TextField
+              name="desc"
+              label="Description"
+              fullWidth
+              margin="normal"
+              value={newStudent.desc}
+              onChange={handleChange}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+              fullWidth
+              onClick={handleAddStudent}
+            >
+              Add Student
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </DashboardCard>
   );
 };
