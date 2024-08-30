@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { useRoutes } from 'react-router-dom';
 import Router from './routes/Router';

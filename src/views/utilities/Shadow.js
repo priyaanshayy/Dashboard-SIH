@@ -83,7 +83,8 @@ const StudentPerformance = () => {
     try {
       await addDoc(collection(db, 'users'), {
         ...newStudent,
-        whoami: 'Student'
+        whoami: 'Student',
+        college: adminName
       });
       setOpen(false);
     } catch (error) {
@@ -180,11 +181,6 @@ const StudentPerformance = () => {
               <TableCell>
                 <Typography variant="subtitle2" fontWeight={600}>
                   Email
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" fontWeight={600}>
-                  College
                 </Typography>
               </TableCell>
               <TableCell>
