@@ -1,4 +1,3 @@
-// ProductPerformance.js
 import React, { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
@@ -23,7 +22,7 @@ const ProductPerformance = () => {
         }
 
         // Fetch admin data
-        const adminDocRef = doc(db, 'admins', user.uid); // Use UID to fetch admin document
+        const adminDocRef = doc(db, 'admins', user.uid);
         const adminDoc = await getDoc(adminDocRef);
 
         if (!adminDoc.exists()) {
@@ -37,10 +36,12 @@ const ProductPerformance = () => {
         const usersSnapshot = await getDocs(collection(db, 'users'));
         const allUsers = usersSnapshot.docs.map(doc => doc.data());
 
-        // Filter users based on admin's college
-        const filteredUsers = allUsers.filter(user =>
-          user.whoami === 'Alumni' && user.college.toLowerCase() === adminData.name.toLowerCase()
-        );
+        // Filter users based on admin's college with type check
+        const filteredUsers = allUsers.filter(user => {
+          // Ensure college is a string before calling toLowerCase
+          const college = typeof user.college === 'string' ? user.college.toLowerCase() : '';
+          return user.whoami === 'Alumni' && college === adminData.name.toLowerCase();
+        });
 
         // Sort users by salary in descending order
         filteredUsers.sort((a, b) => {
@@ -108,7 +109,7 @@ const ProductPerformance = () => {
                       fontWeight: "500",
                     }}
                   >
-                    {index + 1} {/* Display consecutive numbers starting from 1 */}
+                    {index + 1}
                   </Typography>
                 </TableCell>
                 <TableCell>
