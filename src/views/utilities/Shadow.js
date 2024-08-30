@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, addDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField, InputAdornment, Grid } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField, InputAdornment, Grid, IconButton } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import { IconSearch } from '@tabler/icons-react';
+import { IconSearch, IconTrash } from '@tabler/icons-react';
 
 const StudentPerformance = () => {
   const [adminName, setAdminName] = useState('');
@@ -48,7 +48,7 @@ const StudentPerformance = () => {
         
         // Real-time listener
         const unsubscribe = onSnapshot(usersCollectionRef, (snapshot) => {
-          const allUsers = snapshot.docs.map(doc => doc.data());
+          const allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
           const filteredStudents = allUsers.filter(student => {
             const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
@@ -110,6 +110,16 @@ const StudentPerformance = () => {
       student.techStack.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setFilteredStudents(filtered);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      try {
+        await deleteDoc(doc(db, 'users', id));
+      } catch (error) {
+        console.error('Error deleting student: ', error);
+      }
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -206,6 +216,11 @@ const StudentPerformance = () => {
                   Description
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Actions
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -250,6 +265,11 @@ const StudentPerformance = () => {
                   <Typography variant="subtitle2" fontWeight={600}>
                     {student.desc}
                   </Typography>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(student.id)} color="error">
+                    <IconTrash width="20" height="20" />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

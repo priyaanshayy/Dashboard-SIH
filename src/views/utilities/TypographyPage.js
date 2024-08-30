@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, InputAdornment, Modal } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, InputAdornment, Modal, IconButton } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
-import { IconSearch } from '@tabler/icons-react';
+import { IconSearch, IconTrash } from '@tabler/icons-react';
 
 const AlumniPerformance = () => {
   const [adminName, setAdminName] = useState('');
@@ -46,7 +46,7 @@ const AlumniPerformance = () => {
 
         const usersCollection = collection(db, 'users');
         const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
-          const allUsers = snapshot.docs.map(doc => doc.data());
+          const allUsers = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
           const filteredAlumni = allUsers.filter(alumni => {
             const alumniCollege = typeof alumni.college === 'string' ? alumni.college.toLowerCase() : '';
             return alumni.whoami === 'Alumni' && alumniCollege === adminData.name.toLowerCase();
@@ -115,6 +115,13 @@ const AlumniPerformance = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'users', id));
+    } catch (err) {
+      console.error('Error deleting alumni: ', err);
+    }
+  };
 
   return (
     <DashboardCard title="Alumni List">
@@ -272,11 +279,16 @@ const AlumniPerformance = () => {
                   Description
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Actions
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {displayedAlumni.map((alumni, index) => (
-              <TableRow key={alumni.email}>
+              <TableRow key={alumni.id}>
                 <TableCell>
                   <Typography sx={{ fontSize: "15px", fontWeight: "500" }}>
                     {index + 1}
@@ -316,6 +328,11 @@ const AlumniPerformance = () => {
                   <Typography variant="subtitle2" fontWeight={600}>
                     {alumni.desc}
                   </Typography>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(alumni.id)} color="error">
+                    <IconTrash width="20" height="20" />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
