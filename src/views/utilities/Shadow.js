@@ -185,6 +185,11 @@ const StudentPerformance = () => {
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" fontWeight={600}>
+                  College
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight={600}>
                   Tech Stack
                 </Typography>
               </TableCell>
