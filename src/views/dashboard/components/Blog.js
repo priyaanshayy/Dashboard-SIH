@@ -1,46 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CardContent, Typography, Grid, Rating, Tooltip, Fab } from '@mui/material';
+import { CardContent, Typography, Grid, Box, Stack } from '@mui/material';
 import img1 from 'src/assets/images/products/s05.jpg';
-import img2 from 'src/assets/images/products/s01.jpg';
+import img2 from 'src/assets/images/products/s09.jpg';
 import img3 from 'src/assets/images/products/s07.jpg';
 import img4 from 'src/assets/images/products/s06.jpg';
-import { Stack } from '@mui/system';
-import { IconBasket } from '@tabler/icons-react';
 import BlankCard from '../../../components/shared/BlankCard';
 
 const ecoCard = [
     {
-        title: 'Boat Headphone',
+        title: 'Noah Johnson',
         subheader: 'September 14, 2023',
         photo: img1,
-        salesPrice: 375,
-        price: 285,
-        rating: 4,
+        salesPrice: 105,
+        price: 'Network Engineer at Cisco',
     },
     {
-        title: 'MacBook Air Pro',
+        title: 'Olivia Taylor',
         subheader: 'September 14, 2023',
         photo: img2,
-        salesPrice: 650,
-        price: 900,
-        rating: 5,
+        salesPrice: 75,
+        price: 'Product Designer at Apple',
     },
     {
-        title: 'Red Valvet Dress',
+        title: 'Jack Brown',
         subheader: 'September 14, 2023',
         photo: img3,
         salesPrice: 150,
-        price: 200,
-        rating: 3,
+        price: 'Marketing Manager at Facebook',
     },
     {
-        title: 'Cute Soft Teddybear',
+        title: 'Lisa Brown',
         subheader: 'September 14, 2023',
         photo: img4,
         salesPrice: 285,
-        price: 345,
-        rating: 2,
+        price: 'Data Analyst at Amazon',
     },
 ];
 
@@ -50,28 +44,37 @@ const Blog = () => {
             {ecoCard.map((product, index) => (
                 <Grid item sm={12} md={4} lg={3} key={index}>
                     <BlankCard>
-                        <Typography component={Link} to="/">
-                            <img src={product.photo} alt="img" width="100%" />
-                        </Typography>
-                        <Tooltip title="Add To Cart">
-                            <Fab
-                                size="small"
-                                color="primary"
-                                sx={{ bottom: '75px', right: '15px', position: 'absolute' }}
-                            >
-                                <IconBasket size="16" />
-                            </Fab>
-                        </Tooltip>
+                        <Box
+                            component={Link}
+                            to="/"
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '200px', // Increased height for larger photos
+                                overflow: 'hidden',
+                                mt: 2, // Top margin
+                            }}
+                        >
+                            <img 
+                                src={product.photo} 
+                                alt="img" 
+                                style={{ 
+                                    maxWidth: '90%', // Slightly larger max width
+                                    maxHeight: '90%', // Slightly larger max height
+                                    objectFit: 'contain' 
+                                }} 
+                            />
+                        </Box>
                         <CardContent sx={{ p: 3, pt: 2 }}>
                             <Typography variant="h6">{product.title}</Typography>
                             <Stack direction="row" alignItems="center" justifyContent="space-between" mt={1}>
                                 <Stack direction="row" alignItems="center">
-                                    <Typography variant="h6">${product.price}</Typography>
-                                    <Typography color="textSecondary" ml={1} sx={{ textDecoration: 'line-through' }}>
+                                    <Typography variant="h6">{product.price}</Typography>
+                                    <Typography color="textSecondary" ml={1}>
                                         ${product.salesPrice}
                                     </Typography>
                                 </Stack>
-                                <Rating name="read-only" size="small" value={product.rating} readOnly />
                             </Stack>
                         </CardContent>
                     </BlankCard>
