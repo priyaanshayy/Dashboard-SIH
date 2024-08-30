@@ -58,7 +58,11 @@ const AlumniPerformance = () => {
             return scoreB - scoreA;
           });
 
-        setFilteredAlumni(filteredAlumni);
+          setFilteredAlumni(filteredAlumni);
+          setDisplayedAlumni(filteredAlumni);
+        });
+
+        return () => unsubscribe();
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -96,8 +100,6 @@ const AlumniPerformance = () => {
         whoami: 'Alumni',
         college: adminName,
       });
-      setFilteredAlumni([...filteredAlumni, newAlumni]);
-      setOpen(false); // Close the Modal after form submission
       setNewAlumni({
         fullName: '',
         email: '',
@@ -112,6 +114,7 @@ const AlumniPerformance = () => {
       console.error('Error adding alumni: ', err);
     }
   };
+
 
   return (
     <DashboardCard title="Alumni List">
