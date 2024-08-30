@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, Paper, Modal } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 
-const StudentPerformance = () => {
+const AlumniPerformance = () => {
   const [adminName, setAdminName] = useState('');
-  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [filteredAlumni, setFilteredAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false); // State to control the Modal visibility
+  const [newAlumni, setNewAlumni] = useState({
+    fullName: '',
+    email: '',
+    college: '',
+    techStack: '',
+    postsCount: '',
+    isverified: false,
+    desc: ''
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,8 +31,7 @@ const StudentPerformance = () => {
           throw new Error('No user is currently logged in.');
         }
 
-        // Fetch admin data
-        const adminDocRef = doc(db, 'admins', user.uid); // Use UID to fetch admin document
+        const adminDocRef = doc(db, 'admins', user.uid);
         const adminDoc = await getDoc(adminDocRef);
 
         if (!adminDoc.exists()) {
@@ -32,25 +41,21 @@ const StudentPerformance = () => {
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
 
-        // Fetch users data
         const usersSnapshot = await getDocs(collection(db, 'users'));
         const allUsers = usersSnapshot.docs.map(doc => doc.data());
 
-        // Filter users based on admin's college
-        const filteredStudents = allUsers.filter(student => {
-          // Ensure student.college is a string
-          const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
-          return student.whoami === 'Alumni' && studentCollege === adminData.name.toLowerCase();
+        const filteredAlumni = allUsers.filter(alumni => {
+          const alumniCollege = typeof alumni.college === 'string' ? alumni.college.toLowerCase() : '';
+          return alumni.whoami === 'Alumni' && alumniCollege === adminData.name.toLowerCase();
         });
 
-        // Sort students by a specific attribute (e.g., score)
-        filteredStudents.sort((a, b) => {
-          const scoreA = parseFloat(a.score) || 0; // Replace `score` with appropriate field
+        filteredAlumni.sort((a, b) => {
+          const scoreA = parseFloat(a.score) || 0;
           const scoreB = parseFloat(b.score) || 0;
-          return scoreB - scoreA; // Descending order
+          return scoreB - scoreA;
         });
 
-        setFilteredStudents(filteredStudents);
+        setFilteredAlumni(filteredAlumni);
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -62,6 +67,41 @@ const StudentPerformance = () => {
     fetchData();
   }, []);
 
+  const handleAddAlumni = () => {
+    setOpen(true); // Show the Modal when the button is clicked
+  };
+
+  const handleInputChange = (e) => {
+    setNewAlumni({
+      ...newAlumni,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addDoc(collection(db, 'users'), {
+        ...newAlumni,
+        whoami: 'Alumni',
+        college: adminName,
+      });
+      setFilteredAlumni([...filteredAlumni, newAlumni]);
+      setOpen(false); // Close the Modal after form submission
+      setNewAlumni({
+        fullName: '',
+        email: '',
+        college: '',
+        techStack: '',
+        postsCount: '',
+        isverified: false,
+        desc: ''
+      });
+    } catch (err) {
+      console.error('Error adding alumni: ', err);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -71,10 +111,102 @@ const StudentPerformance = () => {
         <Typography variant="h6" fontWeight={600}>
           Our Alumni
         </Typography>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleAddAlumni}>
           Add New Alumni
         </Button>
       </Box>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)} // Close the Modal when the backdrop is clicked
+        aria-labelledby="add-alumni-modal-title"
+        aria-describedby="add-alumni-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}>
+          <Typography variant="h6" mb={2}>
+            Add New Alumni
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              name="fullName"
+              label="Full Name"
+              variant="outlined"
+              value={newAlumni.fullName}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="email"
+              label="Email"
+              variant="outlined"
+              value={newAlumni.email}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="college"
+              label="College"
+              variant="outlined"
+              value={newAlumni.college}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="techStack"
+              label="Tech Stack"
+              variant="outlined"
+              value={newAlumni.techStack}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="postsCount"
+              label="Posts Count"
+              variant="outlined"
+              value={newAlumni.postsCount}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="isverified"
+              label="Verified"
+              variant="outlined"
+              value={newAlumni.isverified}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="desc"
+              label="Description"
+              variant="outlined"
+              value={newAlumni.desc}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              Submit
+            </Button>
+          </form>
+        </Box>
+      </Modal>
+
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
         <Table
           aria-label="simple table"
@@ -128,8 +260,8 @@ const StudentPerformance = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredStudents.map((student, index) => (
-              <TableRow key={student.email}>
+            {filteredAlumni.map((alumni, index) => (
+              <TableRow key={alumni.email}>
                 <TableCell>
                   <Typography
                     sx={{
@@ -142,37 +274,37 @@ const StudentPerformance = () => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.fullName}
+                    {alumni.fullName}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.email}
+                    {alumni.email}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.college}
+                    {alumni.college}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.techStack || '-'}
+                    {alumni.techStack || '-'}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.PostsCount || '-'}
+                    {alumni.postsCount || '-'}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.isverified ? 'Yes' : 'No'}
+                    {alumni.isverified ? 'Yes' : 'No'}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" fontWeight={600}>
-                    {student.desc}
+                    {alumni.desc}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -184,4 +316,4 @@ const StudentPerformance = () => {
   );
 };
 
-export default StudentPerformance;
+export default AlumniPerformance;
