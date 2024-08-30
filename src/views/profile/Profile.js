@@ -4,8 +4,8 @@ import { Box, Typography, Avatar, Divider, Grid, TextField, Button, Paper } from
 import { useTheme } from '@mui/material/styles';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from 'src/firebase/firebaseConfig'; // Adjust the path to your firebase config
-import ProfileImg from 'src/assets/images/profile/user-1.jpg'; // Replace with your profile image
+import { db } from 'src/firebase/firebaseConfig'; 
+import ProfileImg from 'src/assets/images/profile/user-1.jpg'; 
 
 const ProfilePage = () => {
   const theme = useTheme();
@@ -27,7 +27,7 @@ const ProfilePage = () => {
           throw new Error('No user is currently logged in.');
         }
 
-        const adminDocRef = doc(db, 'admins', user.uid); // Fetch the admin document using UID
+        const adminDocRef = doc(db, 'admins', user.uid); 
         const adminDoc = await getDoc(adminDocRef);
 
         if (adminDoc.exists()) {

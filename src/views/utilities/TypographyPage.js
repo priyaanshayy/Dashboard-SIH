@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
 import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, TextField, InputAdornment, Modal } from '@mui/material';
@@ -44,22 +44,21 @@ const AlumniPerformance = () => {
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
 
-        const usersSnapshot = await getDocs(collection(db, 'users'));
-        const allUsers = usersSnapshot.docs.map(doc => doc.data());
+        const usersCollection = collection(db, 'users');
+        const unsubscribe = onSnapshot(usersCollection, (snapshot) => {
+          const allUsers = snapshot.docs.map(doc => doc.data());
+          const filteredAlumni = allUsers.filter(alumni => {
+            const alumniCollege = typeof alumni.college === 'string' ? alumni.college.toLowerCase() : '';
+            return alumni.whoami === 'Alumni' && alumniCollege === adminData.name.toLowerCase();
+          });
 
-        const filteredAlumni = allUsers.filter(alumni => {
-          const alumniCollege = typeof alumni.college === 'string' ? alumni.college.toLowerCase() : '';
-          return alumni.whoami === 'Alumni' && alumniCollege === adminData.name.toLowerCase();
-        });
-
-        filteredAlumni.sort((a, b) => {
-          const scoreA = parseFloat(a.score) || 0;
-          const scoreB = parseFloat(b.score) || 0;
-          return scoreB - scoreA;
-        });
+          filteredAlumni.sort((a, b) => {
+            const scoreA = parseFloat(a.score) || 0;
+            const scoreB = parseFloat(b.score) || 0;
+            return scoreB - scoreA;
+          });
 
         setFilteredAlumni(filteredAlumni);
-        setDisplayedAlumni(filteredAlumni);
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -98,8 +97,7 @@ const AlumniPerformance = () => {
         college: adminName,
       });
       setFilteredAlumni([...filteredAlumni, newAlumni]);
-      setDisplayedAlumni([...filteredAlumni, newAlumni]);
-      setOpen(false);
+      setOpen(false); // Close the Modal after form submission
       setNewAlumni({
         fullName: '',
         email: '',
@@ -109,13 +107,11 @@ const AlumniPerformance = () => {
         isverified: false,
         desc: ''
       });
+      setOpen(false);
     } catch (err) {
       console.error('Error adding alumni: ', err);
     }
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <DashboardCard title="Alumni List">

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { collection, doc, getDoc, getDocs, addDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebaseConfig'; 
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, Grid } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button, Modal, TextField } from '@mui/material';
 import DashboardCard from 'src/components/shared/DashboardCard';
 import { IconSearch } from '@tabler/icons-react';
 
@@ -44,25 +44,32 @@ const StudentPerformance = () => {
         const adminData = adminDoc.data();
         setAdminName(adminData.name.toLowerCase());
 
+        // Fetch users data
         const usersSnapshot = await getDocs(collection(db, 'users'));
         const allUsers = usersSnapshot.docs.map(doc => doc.data());
 
+        // Filter users based on admin's college
         const filteredStudents = allUsers.filter(student => {
           const studentCollege = typeof student.college === 'string' ? student.college.toLowerCase() : '';
           return student.whoami === 'Student' && studentCollege === adminData.name.toLowerCase();
         });
 
+        // Sort students by a specific attribute (e.g., score)
         filteredStudents.sort((a, b) => {
           const scoreA = parseFloat(a.score) || 0; 
           const scoreB = parseFloat(b.score) || 0;
           return scoreB - scoreA; 
         });
 
-        setFilteredStudents(filteredStudents);
+          setFilteredStudents(filteredStudents);
+          setLoading(false);
+        });
+
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
-      } finally {
         setLoading(false);
       }
     };
