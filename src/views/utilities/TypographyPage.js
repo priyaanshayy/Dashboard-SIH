@@ -8,6 +8,7 @@ import DashboardCard from 'src/components/shared/DashboardCard';
 const AlumniPerformance = () => {
   const [adminName, setAdminName] = useState('');
   const [filteredAlumni, setFilteredAlumni] = useState([]);
+  const [displayedAlumni, setDisplayedAlumni] = useState([]); // Added to handle filtered list
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false); // State to control the Modal visibility
@@ -20,6 +21,7 @@ const AlumniPerformance = () => {
     isverified: false,
     desc: ''
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +58,7 @@ const AlumniPerformance = () => {
         });
 
         setFilteredAlumni(filteredAlumni);
+        setDisplayedAlumni(filteredAlumni); // Initialize displayed list
       } catch (err) {
         console.error('Error fetching data: ', err);
         setError(err);
@@ -66,6 +69,14 @@ const AlumniPerformance = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Filter alumni based on search query
+    const filtered = filteredAlumni.filter(alumni =>
+      alumni.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setDisplayedAlumni(filtered);
+  }, [searchQuery, filteredAlumni]);
 
   const handleAddAlumni = () => {
     setOpen(true); // Show the Modal when the button is clicked
@@ -87,6 +98,7 @@ const AlumniPerformance = () => {
         college: adminName,
       });
       setFilteredAlumni([...filteredAlumni, newAlumni]);
+      setDisplayedAlumni([...filteredAlumni, newAlumni]); // Update displayed list
       setOpen(false); // Close the Modal after form submission
       setNewAlumni({
         fullName: '',
@@ -107,13 +119,24 @@ const AlumniPerformance = () => {
 
   return (
     <DashboardCard title="Alumni List">
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" fontWeight={600}>
-          Our Alumni
-        </Typography>
-        <Button variant="contained" color="primary" onClick={handleAddAlumni}>
-          Add New Alumni
-        </Button>
+      <Box display="flex" flexDirection="column" mb={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h6" fontWeight={600}>
+            Our Alumni
+          </Typography>
+          <Button variant="contained" color="primary" onClick={handleAddAlumni}>
+            Add New Alumni
+          </Button>
+        </Box>
+
+        <TextField
+          placeholder="Search by full name"
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
       </Box>
 
       <Modal
@@ -260,7 +283,7 @@ const AlumniPerformance = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredAlumni.map((alumni, index) => (
+            {displayedAlumni.map((alumni, index) => (
               <TableRow key={alumni.email}>
                 <TableCell>
                   <Typography
